@@ -106,9 +106,9 @@
     </div>
 
     <div class="flex gap-4 mt-6">
-        <button @click="slide = (slide - 1 + dates.length) % dates.length"
+        <button @click="pauseAllVideos(); slide = (slide - 1 + dates.length) % dates.length"
             class="bg-pink-300 hover:bg-pink-400 text-white font-bold px-4 py-2 rounded-xl transition transform hover:scale-105">←</button>
-        <button @click="slide = (slide + 1) % dates.length"
+        <button @click="pauseAllVideos(); slide = (slide + 1) % dates.length"
             class="bg-pink-300 hover:bg-pink-400 text-white font-bold px-4 py-2 rounded-xl transition transform hover:scale-105">→</button>
     </div>
 
@@ -279,6 +279,14 @@
                     }, 1600);
                 }
             };
+            
+            pauseAllVideos() {
+                const videos = document.querySelectorAll('video');
+                videos.forEach(video => {
+                    video.pause();
+                    video.currentTime = 0;
+                });
+            }
         }
 
     </script>
