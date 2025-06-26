@@ -122,13 +122,6 @@
 
     <script>
         function galleryApp() {
-            pauseAllVideos() {
-                const videos = document.querySelectorAll('video');
-                videos.forEach(video => {
-                    video.pause();
-                    video.currentTime = 0;
-                });
-            }
             return {
                 slide: 0,
                 showQuestion: true,
@@ -284,6 +277,14 @@
                             setTimeout(() => heart.remove(), 4000);
                         }, 500);
                     }, 1600);
+                },
+
+                pauseAllVideos() {
+                    const videos = document.querySelectorAll('video');
+                    videos.forEach(video => {
+                        video.pause();
+                        video.currentTime = 0;
+                    });
                 }
             };
         }
