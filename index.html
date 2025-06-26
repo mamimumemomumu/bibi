@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" x-data="galleryApp()" x-init="init()">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌸🌸</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <style>
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-8px);
+            }
+
+            40% {
+                transform: translateX(8px);
+            }
+
+            60% {
+                transform: translateX(-8px);
+            }
+
+            80% {
+                transform: translateX(8px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .animate-shake {
+            animation: shake 0.5s;
+        }
+    </style>
+</head>
+
+<body class="bg-pink-50 text-gray-800 flex flex-col items-center justify-center min-h-screen p-4 relative">
+
+    <div x-show="showQuestion" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div :class="{ 'animate-shake': wrongAnswer }" @animationend="wrongAnswer = false"
+            class="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-md text-center">
+            <h2 class="text-xl font-bold mb-4">🧠 A tiny question first!</h2>
+            <p class="mb-6">When was our very first date? 🤔</p>
+
+
+            <div class="flex flex-col gap-3">
+                <button @click="wrongAnswer = true"
+                    class="bg-pink-200 hover:bg-pink-300 text-black px-4 py-2 rounded-xl">Apr 11, 2025</button>
+                <button @click="celebrate(); showQuestion = false"
+                    class="bg-pink-200 hover:bg-pink-300 text-black px-4 py-2 rounded-xl">Apr 12, 2025</button>
+                <button @click="wrongAnswer = true"
+                    class="bg-pink-200 hover:bg-pink-300 text-black px-4 py-2 rounded-xl">Apr 13, 2025</button>
+            </div>
+
+            <p x-show="wrongAnswer" class="text-red-500 mt-4 font-medium">Oops! That’s not it. Try again, cutie 🥺</p>
+        </div>
+    </div>
+
+    <template x-if="!showQuestion">
+        <div class="w-full flex flex-col items-center">
+            <h1 class="text-3xl font-bold mb-6 animate-bounce">🌸 Bibi Moments 🌸 </h1>
+
+            <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-4 transition-all duration-500">
+                <template x-for="(item, index) in dates" :key="index">
+                    <div x-show="slide === index" class="space-y-4">
+                        <div class="rounded-xl overflow-hidden shadow-md">
+                            <template x-if="item.type === 'image'">
+                                <img :src="item.src" class="w-full object-cover" />
+                            </template>
+
+                            <template x-if="item.type === 'video'">
+                                <video :src="item.src" controls class="w-full rounded-xl" playsinline
+                                    x-bind:autoplay="item.src === 'images/2.mp4'"
+                                    x-bind:loop="item.src === 'images/2.mp4'" muted></video>
+                            </template>
+                        </div>
+
+
+                        <div class="text-center space-y-1">
+                            <div class="text-sm text-gray-500" x-text="'📅 ' + item.date"></div>
+                            <div class="text-sm text-gray-500" x-text="'📍 ' + item.place"></div>
+                            <div class="text-lg font-medium mt-2" x-html="'💌 ' + item.message.replaceAll('+', '<br>')">
+                            </div>
+                        </div>
+                    </div>
+            </div>
+    </template>
+    </div>
+
+    <div class="flex gap-4 mt-6">
+        <button @click="slide = (slide - 1 + dates.length) % dates.length"
+            class="bg-pink-300 hover:bg-pink-400 text-white font-bold px-4 py-2 rounded-xl transition transform hover:scale-105">←</button>
+        <button @click="slide = (slide + 1) % dates.length"
+            class="bg-pink-300 hover:bg-pink-400 text-white font-bold px-4 py-2 rounded-xl transition transform hover:scale-105">→</button>
+    </div>
+
+    <div class="mt-4 text-sm text-gray-400">slide <span x-text="slide + 1"></span> / <span x-text="dates.length"></span>
+    </div>
+    </div>
+    </template>
+
+    <div id="heart-container" class="fixed bottom-0 left-0 w-full h-full pointer-events-none overflow-hidden z-10">
+    </div>
+
+    <script>
+        function galleryApp() {
+            return {
+                slide: 0,
+                showQuestion: true,
+                wrongAnswer: false,
+                dates: [
+                    {
+                        type: 'image',
+                        src: 'images/1.jpg',
+                        date: 'Apr 12, 2025',
+                        place: 'Grano di Pa 🍕',
+                        message: 'The first time we met+ and you give me a prophecy'
+                    },
+                    {
+                        type: 'video',
+                        src: 'images/2.mp4',
+                        date: 'Apr 13, 2025',
+                        place: 'POONYPOONYCOOFEE',
+                        message: 'Couldn’t wait a day, huh? Coffee time ☕️'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/3.jpg',
+                        date: 'Apr 18, 2025',
+                        place: 'Smalls',
+                        message: 'you, me, and cozy Japanese music 🌸'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/4.jpg',
+                        date: 'Apr 19, 2025',
+                        place: 'your room',
+                        message: 'And this... was the start+ of your esan sausage addiction'
+                    },
+                    {
+                        type: 'video',
+                        src: 'images/5.mp4',
+                        date: 'Apr 20, 2025',
+                        place: 'Chatuchak Park',
+                        message: 'Just a walk, but with you 💕🚶‍♀️🚶‍♂️'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/6.jpg',
+                        date: 'Apr 20, 2025',
+                        place: 'Gojiro Ramen',
+                        message: 'The best Ramen ever! 🍜'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/7.jpg',
+                        date: 'Apr 26, 2025',
+                        place: 'Talat Noi',
+                        message: 'Walks & snapshots with you 📸💞'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/8.jpg',
+                        date: 'Apr 26, 2025',
+                        place: 'A Pink Rabbit',
+                        message: 'Carrot cake 🥕🍰'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/9.jpg',
+                        date: 'Apr 27, 2025',
+                        place: 'Lumphini Park',
+                        message: 'cats, crows, lizards, and weird birds'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/10.jpg',
+                        date: 'May 3, 2025',
+                        place: 'Emsphere',
+                        message: 'Do you wanna eat ramyeon? 😉🍜'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/11.jpg',
+                        date: 'May 4, 2025',
+                        place: 'Boat noodle nearby Victory Monument ',
+                        message: 'Spicy, hot weather but guuud 🤓'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/12.jpg',
+                        date: 'May 4, 2025',
+                        place: 'Victory Monument',
+                        message: 'Before we went to don don don donki~'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/13.jpg',
+                        date: 'May 4, 2025',
+                        place: 'Chula Park',
+                        message: 'After we went to don don don donki~'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/14.jpg',
+                        date: 'May 29, 2025',
+                        place: 'your room',
+                        message: 'Still smiling from your+little pretty flowers surprise💐😊'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/15.jpg',
+                        date: 'Jun 14, 2025',
+                        place: 'Bang Kachao',
+                        message: 'We actually went… finally! 😌✨'
+                    },
+                    {
+                        type: 'video',
+                        src: 'images/16.mp4',
+                        date: 'Jun 21, 2025',
+                        place: 'A LOT!',
+                        message: 'You made my birthday weekend+ feel extra special 🎈✨'
+                    },
+                    {
+                        type: 'image',
+                        src: 'images/17.jpg',
+                        date: 'Jun 22, 2025',
+                        place: 'your room',
+                        message: 'Birthday cake and Bagels ~ 🥯🎂+Thank you bibi 🥹🥹'
+                    },
+                ],
+                init() {
+                    this.slide = 0;
+                },
+
+                celebrate() {
+                    const emojis = ['🎉', '🥳', '💖', '✨', '💫', '🌸'];
+                    for (let i = 0; i < 15; i++) {
+                        setTimeout(() => {
+                            const emoji = document.createElement('div');
+                            emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                            emoji.className = 'absolute text-2xl pointer-events-none';
+                            emoji.style.left = Math.random() * 100 + 'vw';
+                            emoji.style.top = Math.random() * 100 + 'vh';
+                            emoji.style.animation = 'float-up 3s ease-out forwards';
+                            document.getElementById('celebrate-container')?.appendChild(emoji);
+                            setTimeout(() => emoji.remove(), 3000);
+                        }, i * 100);
+                    }
+                    setTimeout(() => {
+                        setInterval(() => {
+                            const heart = document.createElement('div');
+                            heart.innerText = '💖';
+                            heart.className = 'absolute text-2xl animate-pulse';
+                            heart.style.left = Math.random() * 100 + 'vw';
+                            heart.style.bottom = '0';
+                            heart.style.animation = `float-up 4s ease-out forwards`;
+                            document.getElementById('heart-container')?.appendChild(heart);
+                            setTimeout(() => heart.remove(), 4000);
+                        }, 500);
+                    }, 1600);
+                }
+            };
+        }
+
+    </script>
+
+    <div id="celebrate-container" class="fixed inset-0 z-40 pointer-events-none overflow-hidden"></div>
+</body>
+
+</html>
